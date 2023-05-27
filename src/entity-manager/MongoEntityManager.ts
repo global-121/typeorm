@@ -912,7 +912,7 @@ export class MongoEntityManager extends EntityManager {
     /**
      * Update a single document on MongoDB.
      */
-    updateOne<Entity extends ObjectLiteral>(
+    updateOne<Entity>(
         entityClassOrName: EntityTarget<Entity>,
         query: Filter<Document>,
         update: UpdateFilter<Document>,
@@ -934,7 +934,7 @@ export class MongoEntityManager extends EntityManager {
     /**
      * Converts FindManyOptions to mongodb query.
      */
-    protected convertFindManyOptionsOrConditionsToMongodbQuery<Entity extends ObjectLiteral>(
+    protected convertFindManyOptionsOrConditionsToMongodbQuery<Entity>(
         optionsOrConditions:
             | MongoFindManyOptions<Entity>
             | Partial<Entity>
@@ -957,7 +957,7 @@ export class MongoEntityManager extends EntityManager {
     /**
      * Converts FindOneOptions to mongodb query.
      */
-    protected convertFindOneOptionsOrConditionsToMongodbQuery<Entity extends ObjectLiteral>(
+    protected convertFindOneOptionsOrConditionsToMongodbQuery<Entity>(
         optionsOrConditions:
             | MongoFindOneOptions<Entity>
             | Partial<Entity>
@@ -1160,7 +1160,7 @@ export class MongoEntityManager extends EntityManager {
         return result.length > 0 ? result[0] as FindReturnType<Entity, Options['select'], Options['relations']> : null
     }
 
-    protected async executeFind<Entity extends ObjectLiteral>(
+    protected async executeFind<Entity>(
         entityClassOrName: EntityTarget<Entity>,
         optionsOrConditions?:
             | MongoFindManyOptions<Entity>

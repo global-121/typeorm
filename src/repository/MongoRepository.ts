@@ -89,12 +89,15 @@ export class MongoRepository<
      * Finds entities that match given find options or conditions.
      */
     find<
-        Options extends FindManyOptions<Entity>
+        Options extends
+            | FindManyOptions<Entity>
             | Partial<Entity>
-            | FilterOperators<Entity>
+            | FilterOperators<Entity>,
     >(
         options?: Options,
-    ): Promise<FindReturnType<Entity, Options['select'], Options['relations']>[]> {
+    ): Promise<
+        FindReturnType<Entity, Options["select"], Options["relations"]>[]
+    > {
         return this.manager.find(this.metadata.target, options)
     }
 
@@ -112,7 +115,12 @@ export class MongoRepository<
      */
     findAndCount<Options extends MongoFindManyOptions<Entity>>(
         options?: Options,
-    ): Promise<[FindReturnType<Entity, Options['select'], Options['relations']>[], number]> {
+    ): Promise<
+        [
+            FindReturnType<Entity, Options["select"], Options["relations"]>[],
+            number,
+        ]
+    > {
         return this.manager.findAndCount(this.metadata.target, options)
     }
 
@@ -144,7 +152,11 @@ export class MongoRepository<
      */
     async findOne<Options extends MongoFindOneOptions<Entity>>(
         options: Options,
-    ): Promise<FindReturnType<Entity, Options['select'], Options['relations']> | null> {
+    ): Promise<FindReturnType<
+        Entity,
+        Options["select"],
+        Options["relations"]
+    > | null> {
         return this.manager.findOne(this.metadata.target, options)
     }
 
@@ -174,7 +186,11 @@ export class MongoRepository<
      * Finds first entity by a given find options.
      * If entity was not found in the database - rejects with error.
      */
-    async findOneOrFail<Options extends MongoFindOneOptions<Entity>>(options: Options): Promise<FindReturnType<Entity, Options['select'], Options['relations']>> {
+    async findOneOrFail<Options extends MongoFindOneOptions<Entity>>(
+        options: Options,
+    ): Promise<
+        FindReturnType<Entity, Options["select"], Options["relations"]>
+    > {
         return this.manager.findOneOrFail(this.metadata.target, options)
     }
 

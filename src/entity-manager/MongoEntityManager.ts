@@ -65,6 +65,8 @@ import {
 } from "../find-options/FindOptionsSelect"
 import { ObjectUtils } from "../util/ObjectUtils"
 import { ColumnMetadata } from "../metadata/ColumnMetadata"
+import { FindReturnType } from "../find-options/FindReturnType";
+import { EntityNotFoundError } from "../error";
 
 /**
  * Entity manager supposed to work with any entity, automatically find its repository and call its methods,
@@ -98,13 +100,15 @@ export class MongoEntityManager extends EntityManager {
     /**
      * Finds entities that match given find options or conditions.
      */
-    async find<Entity>(
-        entityClassOrName: EntityTarget<Entity>,
-        optionsOrConditions?:
-            | FindManyOptions<Entity>
+    async find<
+        Entity extends ObjectLiteral,
+        Options extends FindManyOptions<Entity>
             | Partial<Entity>
-            | FilterOperators<Entity>,
-    ): Promise<Entity[]> {
+            | FilterOperators<Entity>
+    >(
+        entityClassOrName: EntityTarget<Entity>,
+        optionsOrConditions?: Options,
+    ): Promise<FindReturnType<Entity, Options['select'], Options['relations']>[]> {
         const query =
             this.convertFindManyOptionsOrConditionsToMongodbQuery(
                 optionsOrConditions,
@@ -136,7 +140,7 @@ export class MongoEntityManager extends EntityManager {
         } else if (deleteDateColumn) {
             this.filterSoftDeleted(cursor, deleteDateColumn, query)
         }
-        return cursor.toArray()
+        return cursor.toArray() as Promise<FindReturnType<Entity, Options['select'], Options['relations']>[]>
     }
 
     /**
@@ -144,21 +148,24 @@ export class MongoEntityManager extends EntityManager {
      * Also counts all entities that match given conditions,
      * but ignores pagination settings (from and take options).
      */
-    async findAndCount<Entity>(
+    async findAndCount<
+        Entity extends ObjectLiteral,
+        Options extends MongoFindManyOptions<Entity>
+    >(
         entityClassOrName: EntityTarget<Entity>,
-        options?: MongoFindManyOptions<Entity>,
-    ): Promise<[Entity[], number]> {
+        options?: Options,
+    ): Promise<[FindReturnType<Entity, Options['select'], Options['relations']>[], number]> {
         return this.executeFindAndCount(entityClassOrName, options)
     }
 
     /**
      * Finds entities that match given where conditions.
      */
-    async findAndCountBy<Entity>(
+    async findAndCountBy<Entity extends ObjectLiteral>(
         entityClassOrName: EntityTarget<Entity>,
         where: any,
     ): Promise<[Entity[], number]> {
-        return this.executeFindAndCount(entityClassOrName, where)
+        return this.executeFindAndCount(entityClassOrName, where) as Promise<[Entity[], number]>
     }
 
     /**
@@ -224,21 +231,24 @@ export class MongoEntityManager extends EntityManager {
     /**
      * Finds first entity that matches given conditions and/or find options.
      */
-    async findOne<Entity>(
+    async findOne<
+        Entity extends ObjectLiteral,
+        Options extends MongoFindOneOptions<Entity>
+    >(
         entityClassOrName: EntityTarget<Entity>,
-        options: MongoFindOneOptions<Entity>,
-    ): Promise<Entity | null> {
+        options: Options,
+    ): Promise<FindReturnType<Entity, Options['select'], Options['relations']> | null> {
         return this.executeFindOne(entityClassOrName, options)
     }
 
     /**
      * Finds first entity that matches given WHERE conditions.
      */
-    async findOneBy<Entity>(
+    async findOneBy<Entity extends ObjectLiteral>(
         entityClassOrName: EntityTarget<Entity>,
         where: any,
     ): Promise<Entity | null> {
-        return this.executeFindOne(entityClassOrName, where)
+        return this.executeFindOne(entityClassOrName, where) as Promise<Entity | null>
     }
 
     /**
@@ -250,11 +260,31 @@ export class MongoEntityManager extends EntityManager {
      *     id: 1 // where "id" is your primary column name
      * })
      */
-    async findOneById<Entity>(
+    async findOneById<Entity extends ObjectLiteral>(
         entityClassOrName: EntityTarget<Entity>,
         id: string | number | Date | ObjectId,
     ): Promise<Entity | null> {
-        return this.executeFindOne(entityClassOrName, id)
+        return this.executeFindOne(entityClassOrName, id) as Promise<Entity | null>
+    }
+
+    /**
+     * Finds first entity by a given find options.
+     * If entity was not found in the database - rejects with error.
+     */
+    async findOneOrFail<Entity extends ObjectLiteral, Options extends MongoFindOneOptions<Entity>>(
+        entityClass: EntityTarget<Entity>,
+        options: Options,
+    ): Promise<FindReturnType<Entity, Options['select'], Options['relations']>> {
+        return this.findOne<Entity, Options>(entityClass as any, options).then(
+            (value) => {
+                if (value === null) {
+                    return Promise.reject(
+                        new EntityNotFoundError(entityClass, options),
+                    )
+                }
+                return Promise.resolve(value)
+            },
+        )
     }
 
     /**
@@ -882,7 +912,7 @@ export class MongoEntityManager extends EntityManager {
     /**
      * Update a single document on MongoDB.
      */
-    updateOne<Entity>(
+    updateOne<Entity extends ObjectLiteral>(
         entityClassOrName: EntityTarget<Entity>,
         query: Filter<Document>,
         update: UpdateFilter<Document>,
@@ -904,7 +934,7 @@ export class MongoEntityManager extends EntityManager {
     /**
      * Converts FindManyOptions to mongodb query.
      */
-    protected convertFindManyOptionsOrConditionsToMongodbQuery<Entity>(
+    protected convertFindManyOptionsOrConditionsToMongodbQuery<Entity extends ObjectLiteral>(
         optionsOrConditions:
             | MongoFindManyOptions<Entity>
             | Partial<Entity>
@@ -927,7 +957,7 @@ export class MongoEntityManager extends EntityManager {
     /**
      * Converts FindOneOptions to mongodb query.
      */
-    protected convertFindOneOptionsOrConditionsToMongodbQuery<Entity>(
+    protected convertFindOneOptionsOrConditionsToMongodbQuery<Entity extends ObjectLiteral>(
         optionsOrConditions:
             | MongoFindOneOptions<Entity>
             | Partial<Entity>
@@ -1077,11 +1107,14 @@ export class MongoEntityManager extends EntityManager {
     /**
      * Finds first entity that matches given conditions and/or find options.
      */
-    protected async executeFindOne<Entity>(
+    protected async executeFindOne<
+        Entity extends ObjectLiteral,
+        Options extends MongoFindOneOptions<Entity>
+    >(
         entityClassOrName: EntityTarget<Entity>,
-        optionsOrConditions?: any,
-        maybeOptions?: MongoFindOneOptions<Entity>,
-    ): Promise<Entity | null> {
+        optionsOrConditions?: any | Options,
+        maybeOptions?: Options
+    ): Promise<FindReturnType<Entity, Options['select'], Options['relations']> | null> {
         const objectIdInstance = PlatformTools.load("mongodb").ObjectId
         const id =
             optionsOrConditions instanceof objectIdInstance ||
@@ -1124,10 +1157,10 @@ export class MongoEntityManager extends EntityManager {
 
         // const result = await cursor.limit(1).next();
         const result = await cursor.limit(1).toArray()
-        return result.length > 0 ? result[0] : null
+        return result.length > 0 ? result[0] as FindReturnType<Entity, Options['select'], Options['relations']> : null
     }
 
-    protected async executeFind<Entity>(
+    protected async executeFind<Entity extends ObjectLiteral>(
         entityClassOrName: EntityTarget<Entity>,
         optionsOrConditions?:
             | MongoFindManyOptions<Entity>
@@ -1169,10 +1202,13 @@ export class MongoEntityManager extends EntityManager {
     /**
      * Finds entities that match given find options or conditions.
      */
-    async executeFindAndCount<Entity>(
+    async executeFindAndCount<
+        Entity extends ObjectLiteral,
+        Options extends MongoFindManyOptions<Entity> | Partial<Entity>
+    >(
         entityClassOrName: EntityTarget<Entity>,
-        optionsOrConditions?: MongoFindManyOptions<Entity> | Partial<Entity>,
-    ): Promise<[Entity[], number]> {
+        optionsOrConditions?: Options,
+    ): Promise<[FindReturnType<Entity, Options['select'], Options['relations']>[], number]> {
         const query =
             this.convertFindManyOptionsOrConditionsToMongodbQuery(
                 optionsOrConditions,

@@ -46,7 +46,7 @@ jobs:
         run: npm run test-fast
 
       - name: Stop services
-        run: docker-compose down
+        run: docker compose down
 
       - name: Store coverage artifacts
         if: always()

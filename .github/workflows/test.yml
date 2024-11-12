@@ -1,6 +1,6 @@
 name: Test
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   test:
@@ -38,6 +38,9 @@ jobs:
         run: |
           sleep 60
         shell: bash
+
+      - name: Build the project
+        run: npm run build
 
       - name: Run tests
         run: npm run test-fast

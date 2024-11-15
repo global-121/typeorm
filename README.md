@@ -2,6 +2,29 @@
 
 This repository is a fork of the official TypeORM repository. It is customized and maintained for use in the [121 platform](https://github.com/global-121/121-platform).
 
+## CI & CD
+
+Originally, tests ran in CircleCI. In this fork, they have been migrated to run in GitHub Actions.
+
+### How to Get Your Change to 121:
+
+**TypeORM Repo:**
+
+- **Code Changes:**
+  - Follow the same rebase process as on [121](https://github.com/global-121/121-platform/wiki/Git-rebase).
+  - Be aware that when you create a PR, you should point it towards the `master` branch of the fork and not the `master` branch of the original repository.
+
+- **Release:**
+  - Follow the same process as described [here](https://github.com/global-121/121-platform?tab=readme-ov-file#releases) for the 121 platform. Just use SemVer instead of CalVer. To generate a new version, you can use:
+    - `npm version major` for a major version increment (e.g., 1.0.0 to 2.0.0)
+    - `npm version minor` for a minor version increment (e.g., 1.0.0 to 1.1.0)
+    - `npm version patch` for a patch version increment (e.g., 1.0.0 to 1.0.1)
+  - After a release, the code gets automatically published to npm.
+
+**In 121:**
+
+- Update the package to the new version by using `npm i @global121/typeorm <version-number>`.
+
 <div align="center">
   <a href="http://typeorm.io/">
     <img src="https://github.com/typeorm/typeorm/raw/master/resources/logo_big.png" width="492" height="228">

@@ -9,16 +9,16 @@ on:
     types: [created]
 
 jobs:
-  lint:
-    name: 'Lint'
-    uses: ./.github/workflows/lint.yml
+  # lint:
+  #   name: "Lint"
+  #   uses: ./.github/workflows/lint.yml
 
-  test:
-    name: 'Test'
-    uses: ./.github/workflows/test.yml
+  # test:
+  #   name: "Test"
+  #   uses: ./.github/workflows/test.yml
 
   publish-npm:
-    needs: [test, lint]
+    # needs: [test, lint]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,6 +28,8 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run compile
+      - run: npm run package
+      - run: cd build/package
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

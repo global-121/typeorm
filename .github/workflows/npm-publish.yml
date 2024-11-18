@@ -10,11 +10,11 @@ on:
 
 jobs:
   lint:
-    name: 'Lint'
+    name: "Lint"
     uses: ./.github/workflows/lint.yml
 
   test:
-    name: 'Test'
+    name: "Test"
     uses: ./.github/workflows/test.yml
 
   publish-npm:
@@ -28,6 +28,9 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run compile
-      - run: npm publish --access public
+      - run: npm run package
+      - run: |
+          cd build/package
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

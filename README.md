@@ -6,7 +6,7 @@ This repository is a fork of the official TypeORM repository. It is customized a
 
 Originally, tests ran in CircleCI. In this fork, they have been migrated to run in GitHub Actions.
 
-### How to Get Your Change to 121:
+### How to Get Your Change to 121
 
 **TypeORM Repo:**
 

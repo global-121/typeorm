@@ -12,7 +12,7 @@ Originally, tests ran in CircleCI. In this fork, they have been migrated to run 
 
 - **Code Changes:**
   - Follow the [121 contributing guidelines](https://github.com/global-121/121-platform/blob/main/docs/CONTRIBUTING.md).
-  - Be aware that when you create a PR, you should point it towards the `master` branch of the fork and not the `master` branch of the original repository.
+  - Be aware that when you create a PR, you should point it towards the `master` branch of this fork and *not* the `master` branch of the original repository.
 
 - **Release:**
   - Follow the same process as described [here](https://github.com/global-121/121-platform?tab=readme-ov-file#releases) for the 121 platform. Just use SemVer instead of CalVer. To generate a new version, you can use:

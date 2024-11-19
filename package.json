@@ -1,6 +1,6 @@
 {
   "name": "@global121/typeorm",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A fork of the TypeORM library with custom modifications",
   "license": "MIT",
   "readmeFilename": "README.md",

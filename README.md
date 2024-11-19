@@ -30,9 +30,6 @@ Originally, tests ran in CircleCI. In this fork, they have been migrated to run 
   - Press `Publish Release`. After release a github actions worksflow should run automatically to publish the release to npm
 - To use your release in the 121-platform follow the documentation in this [Readme](https://github.com/global-121/121-platform/blob/main/services/121-service/README.md#updatingadding-nodejs-dependencies)
 
-**In 121:**
-
-- Update the package to the new version by using `npm i @global121/typeorm <version-number>`.
 
 <div align="center">
   <a href="http://typeorm.io/">

@@ -15,11 +15,20 @@ Originally, tests ran in CircleCI. In this fork, they have been migrated to run 
   - Be aware that when you create a PR, you should point it towards the `master` branch of this fork and *not* the `master` branch of the original repository.
 
 - **Release:**
-  - Follow the same process as described [here](https://github.com/global-121/121-platform?tab=readme-ov-file#releases) for the 121 platform. Just use SemVer instead of CalVer. To generate a new version, you can use:
-    - `npm version major` for a major version increment (e.g., 1.0.0 to 2.0.0)
-    - `npm version minor` for a minor version increment (e.g., 1.0.0 to 1.1.0)
-    - `npm version patch` for a patch version increment (e.g., 1.0.0 to 1.0.1)
-  - After a release, the code gets automatically published to npm.
+  We use SemVer.
+
+- Create a new branch from `main`
+- Run `npm version` locally
+  - `npm version major` for a major version increment (e.g., 1.0.0 to 2.0.0)
+  - `npm version minor` for a minor version increment (e.g., 1.0.0 to 1.1.0)
+  - `npm version patch` for a patch version increment (e.g., 1.0.0 to 1.0.1)
+- Push the new branch and tag to github: `git push origin <branch-name> --follow-tags`
+- Submit and merge PR
+- Create new release via https://github.com/global-121/typeorm/releases/new
+  - Under `Choose a tag` select the tag you just created from the dropdown
+  - Press button `Generate release notes` to generate release notes automatically. Adjust them if needed
+  - Press `Publish Release`. After release a github actions worksflow should run automatically to publish the release to npm
+- To use your release in the 121-platform follow the documentation in this [Readme](https://github.com/global-121/121-platform/blob/main/services/121-service/README.md#updatingadding-nodejs-dependencies)
 
 **In 121:**
 

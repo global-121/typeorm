@@ -11,7 +11,7 @@ Originally, tests ran in CircleCI. In this fork, they have been migrated to run 
 **TypeORM Repo:**
 
 - **Code Changes:**
-  - Follow the same rebase process as on [121](https://github.com/global-121/121-platform/wiki/Git-rebase).
+  - Follow the [121 contributing guidelines](https://github.com/global-121/121-platform/blob/main/docs/CONTRIBUTING.md).
   - Be aware that when you create a PR, you should point it towards the `master` branch of the fork and not the `master` branch of the original repository.
 
 - **Release:**

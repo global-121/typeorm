@@ -1,3 +1,36 @@
+# About this Fork
+
+This repository is a fork of the official TypeORM repository. It is customized and maintained for use in the [121 platform](https://github.com/global-121/121-platform).
+
+## CI & CD
+
+Originally, tests ran in CircleCI. In this fork, they have been migrated to run in GitHub Actions.
+
+### How to Get Your Change to 121
+
+**TypeORM Repo:**
+
+- **Code Changes:**
+  - Follow the [121 contributing guidelines](https://github.com/global-121/121-platform/blob/main/docs/CONTRIBUTING.md).
+  - Be aware that when you create a PR, you should point it towards the `master` branch of this fork and *not* the `master` branch of the original repository.
+
+- **Release:**
+  We use SemVer.
+
+- Create a new branch from `main`
+- Run `npm version` locally
+  - `npm version major` for a major version increment (e.g., 1.0.0 to 2.0.0)
+  - `npm version minor` for a minor version increment (e.g., 1.0.0 to 1.1.0)
+  - `npm version patch` for a patch version increment (e.g., 1.0.0 to 1.0.1)
+- Push the new branch and tag to github: `git push origin <branch-name> --follow-tags`
+- Submit and merge PR
+- Create new release via https://github.com/global-121/typeorm/releases/new
+  - Under `Choose a tag` select the tag you just created from the dropdown
+  - Press button `Generate release notes` to generate release notes automatically. Adjust them if needed
+  - Press `Publish Release`. After release a github actions worksflow should run automatically to publish the release to npm
+- To use your release in the 121-platform follow the documentation in this [Readme](https://github.com/global-121/121-platform/blob/main/services/121-service/README.md#updatingadding-nodejs-dependencies)
+
+
 <div align="center">
   <a href="http://typeorm.io/">
     <img src="https://github.com/typeorm/typeorm/raw/master/resources/logo_big.png" width="492" height="228">

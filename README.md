@@ -33,7 +33,11 @@ Originally, tests ran in CircleCI. In this fork, they have been migrated to run 
 
 <div align="center">
   <a href="http://typeorm.io/">
-    <img src="https://github.com/typeorm/typeorm/raw/master/resources/logo_big.png" width="492" height="228">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://github.com/typeorm/typeorm/raw/master/resources/typeorm-logo-colored-light.png">
+        <source  media="(prefers-color-scheme: light)" srcset="https://github.com/typeorm/typeorm/raw/master/resources/typeorm-logo-colored-dark.png">
+        <img height="80" width="auto" alt="TypeORM Logo" src="https://github.com/typeorm/typeorm/raw/master/resources/typeorm-logo-colored-dark.png">
+    </picture>
   </a>
   <br>
   <br>
@@ -65,13 +69,6 @@ maintainable applications in the most productive way.
 
 TypeORM is highly influenced by other ORMs, such as [Hibernate](http://hibernate.org/orm/),
 [Doctrine](http://www.doctrine-project.org/) and [Entity Framework](https://www.asp.net/entity-framework).
-
-> **📣 Announcement: The Future of TypeORM**
->
-> We’re excited to share our vision for a revitalized TypeORM—a strategy focused on building a stable, robust, and sustainable foundation for the long term. Learn how we’re structuring maintenance
-> and bringing together dedicated resources to ensure TypeORM thrives for years to come.
->
-> [Read the full announcement](./docs/future-of-typeorm.md)
 
 ## Features
 
